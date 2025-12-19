@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Subtitle-Translation</title>
+    <style>
+      body {
+        width: 320px;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #ffffff;
+        color: #333333;
+        margin: 0;
+      }
+
+      .section {
+        margin-bottom: 20px;
+      }
+
+      h3 {
+        margin: 0 0 15px 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+
+      .toggle-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding: 12px 0;
+      }
+
+      label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #555555;
+      }
+
+      /* Modern Toggle Switch */
+      .toggle-switch {
+        width: 50px;
+        height: 26px;
+        background: #e1e5e9;
+        border-radius: 13px;
+        padding: 2px;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+      }
+
+      .toggle-switch::before {
+        content: '';
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #ffffff;
+        top: 2px;
+        left: 2px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .toggle-switch.active {
+        background: #007bff;
+      }
+
+      .toggle-switch.active::before {
+        left: 26px;
+      }
+
+      .form-select {
+        width: 100%;
+        padding: 10px 12px;
+        margin-top: 8px;
+        background: #ffffff;
+        color: #333333;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-family: inherit;
+        font-size: 14px;
+        box-sizing: border-box;
+        transition: border-color 0.2s ease;
+      }
+
+      .form-select:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+      }
+
+      .form-select option {
+        background: #ffffff;
+        color: #333333;
+      }
+
+      /* Searchable dropdown styles */
+      .searchable-dropdown {
+        position: relative;
+        width: 100%;
+        margin-top: 8px;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 10px 12px;
+        background: #ffffff;
+        color: #333333;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-family: inherit;
+        font-size: 14px;
+        box-sizing: border-box;
+        transition: border-color 0.2s ease;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+      }
+
+      .search-input::placeholder {
+        color: #9ca3af;
+      }
+
+      .dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        max-height: 200px;
+        overflow-y: auto;
+        background: #ffffff;
+        border: 1px solid #d1d5db;
+        border-top: none;
+        border-radius: 0 0 6px 6px;
+        z-index: 1000;
+        display: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .dropdown-list.show {
+        display: block;
+      }
+
+      .dropdown-item {
+        padding: 10px 12px;
+        cursor: pointer;
+        color: #333333;
+        border-bottom: 1px solid #f3f4f6;
+        transition: background-color 0.2s ease;
+        font-size: 14px;
+      }
+
+      .dropdown-item:hover {
+        background: #f8f9fa;
+      }
+
+      .dropdown-item.selected {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+
+      .dropdown-item.hidden {
+        display: none;
+      }
+
+      /* Scrollbar styling */
+      .dropdown-list::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .dropdown-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      .dropdown-list::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+      }
+
+      .dropdown-list::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+      }
+
+      /* Subtitle customization styles */
+      .subtitle-settings {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .setting-group {
+        margin-bottom: 18px;
+      }
+
+      .setting-label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #555555;
+      }
+
+      .font-select {
+        width: 100%;
+        padding: 10px 12px;
+        background: #ffffff;
+        color: #333333;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-family: inherit;
+        font-size: 14px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        transition: border-color 0.2s ease;
+      }
+
+      .font-select:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+      }
+
+      .font-select option {
+        background: #ffffff;
+        color: #333333;
+      }
+
+      .size-control {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .size-slider {
+        flex: 1;
+        height: 6px;
+        background: #e5e7eb;
+        border-radius: 3px;
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+        transition: background 0.2s ease;
+      }
+
+      .size-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        background: #007bff;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+      }
+
+      .size-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+      }
+
+      .size-slider::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        background: #007bff;
+        border-radius: 50%;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .size-value {
+        min-width: 45px;
+        text-align: center;
+        font-size: 13px;
+        color: #666666;
+        font-weight: 500;
+      }
+
+      .opacity-control {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .opacity-slider {
+        flex: 1;
+        height: 6px;
+        background: #e5e7eb;
+        border-radius: 3px;
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+        transition: background 0.2s ease;
+      }
+
+      .opacity-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        background: #007bff;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+      }
+
+      .opacity-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+      }
+
+      .opacity-slider::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        background: #007bff;
+        border-radius: 50%;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .opacity-value {
+        min-width: 45px;
+        text-align: center;
+        font-size: 13px;
+        color: #666666;
+        font-weight: 500;
+      }
+
+      #status {
+        margin-top: 15px;
+        padding: 10px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        text-align: center;
+        font-weight: 500;
+      }
+      
+      .success { 
+        background: #d1fae5; 
+        color: #065f46; 
+        border: 1px solid #a7f3d0;
+      }
+      
+      .error { 
+        background: #fee2e2; 
+        color: #991b1b; 
+        border: 1px solid #fecaca;
+      }
+      
+      .info { 
+        background: #dbeafe; 
+        color: #1e40af; 
+        border: 1px solid #bfdbfe;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="section">
+      <h3>Subtitle Settings</h3>
+      <div class="settings-container">
+        <div class="toggle-container">
+          <label>Translation</label>
+          <div class="toggle-switch" id="translationToggle"></div>
+        </div>
+        <div class="searchable-dropdown">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search language">
+          <div class="dropdown-list" id="languageDropdown">
+            <div class="dropdown-item" data-value="af">Afrikaans</div>
+            <div class="dropdown-item" data-value="sq">Albanian</div>
+            <div class="dropdown-item" data-value="am">Amharic</div>
+            <div class="dropdown-item" data-value="ar">Arabic</div>
+            <div class="dropdown-item" data-value="hy">Armenian</div>
+            <div class="dropdown-item" data-value="az">Azerbaijani</div>
+            <div class="dropdown-item" data-value="eu">Basque</div>
+            <div class="dropdown-item" data-value="be">Belarusian</div>
+            <div class="dropdown-item" data-value="bn">Bengali</div>
+            <div class="dropdown-item" data-value="bs">Bosnian</div>
+            <div class="dropdown-item" data-value="bg">Bulgarian</div>
+            <div class="dropdown-item" data-value="ca">Catalan</div>
+            <div class="dropdown-item" data-value="ceb">Cebuano</div>
+            <div class="dropdown-item" data-value="zh">Chinese (Simplified)</div>
+            <div class="dropdown-item" data-value="zh-TW">Chinese (Traditional)</div>
+            <div class="dropdown-item" data-value="co">Corsican</div>
+            <div class="dropdown-item" data-value="hr">Croatian</div>
+            <div class="dropdown-item" data-value="cs">Czech</div>
+            <div class="dropdown-item" data-value="da">Danish</div>
+            <div class="dropdown-item" data-value="nl">Dutch</div>
+            <div class="dropdown-item" data-value="en">English</div>
+            <div class="dropdown-item" data-value="eo">Esperanto</div>
+            <div class="dropdown-item" data-value="et">Estonian</div>
+            <div class="dropdown-item" data-value="fi">Finnish</div>
+            <div class="dropdown-item" data-value="fr">French</div>
+            <div class="dropdown-item" data-value="fy">Frisian</div>
+            <div class="dropdown-item" data-value="gl">Galician</div>
+            <div class="dropdown-item" data-value="ka">Georgian</div>
+            <div class="dropdown-item" data-value="de">German</div>
+            <div class="dropdown-item" data-value="el">Greek</div>
+            <div class="dropdown-item" data-value="gu">Gujarati</div>
+            <div class="dropdown-item" data-value="ht">Haitian Creole</div>
+            <div class="dropdown-item" data-value="ha">Hausa</div>
+            <div class="dropdown-item" data-value="haw">Hawaiian</div>
+            <div class="dropdown-item" data-value="he">Hebrew</div>
+            <div class="dropdown-item" data-value="hi">Hindi</div>
+            <div class="dropdown-item" data-value="hmn">Hmong</div>
+            <div class="dropdown-item" data-value="hu">Hungarian</div>
+            <div class="dropdown-item" data-value="is">Icelandic</div>
+            <div class="dropdown-item" data-value="ig">Igbo</div>
+            <div class="dropdown-item" data-value="id">Indonesian</div>
+            <div class="dropdown-item" data-value="ga">Irish</div>
+            <div class="dropdown-item" data-value="it">Italian</div>
+            <div class="dropdown-item" data-value="ja">Japanese</div>
+            <div class="dropdown-item" data-value="jv">Javanese</div>
+            <div class="dropdown-item" data-value="kn">Kannada</div>
+            <div class="dropdown-item" data-value="kk">Kazakh</div>
+            <div class="dropdown-item" data-value="km">Khmer</div>
+            <div class="dropdown-item" data-value="ko">Korean</div>
+            <div class="dropdown-item" data-value="ku">Kurdish</div>
+            <div class="dropdown-item" data-value="ky">Kyrgyz</div>
+            <div class="dropdown-item" data-value="lo">Lao</div>
+            <div class="dropdown-item" data-value="la">Latin</div>
+            <div class="dropdown-item" data-value="lv">Latvian</div>
+            <div class="dropdown-item" data-value="lt">Lithuanian</div>
+            <div class="dropdown-item" data-value="lb">Luxembourgish</div>
+            <div class="dropdown-item" data-value="mk">Macedonian</div>
+            <div class="dropdown-item" data-value="mg">Malagasy</div>
+            <div class="dropdown-item" data-value="ms">Malay</div>
+            <div class="dropdown-item" data-value="ml">Malayalam</div>
+            <div class="dropdown-item" data-value="mt">Maltese</div>
+            <div class="dropdown-item" data-value="mi">Maori</div>
+            <div class="dropdown-item" data-value="mr">Marathi</div>
+            <div class="dropdown-item" data-value="mn">Mongolian</div>
+            <div class="dropdown-item" data-value="my">Myanmar (Burmese)</div>
+            <div class="dropdown-item" data-value="ne">Nepali</div>
+            <div class="dropdown-item" data-value="no">Norwegian</div>
+            <div class="dropdown-item" data-value="ny">Nyanja (Chichewa)</div>
+            <div class="dropdown-item" data-value="or">Odia (Oriya)</div>
+            <div class="dropdown-item" data-value="ps">Pashto</div>
+            <div class="dropdown-item" data-value="fa">Persian</div>
+            <div class="dropdown-item" data-value="pl">Polish</div>
+            <div class="dropdown-item" data-value="pt">Portuguese</div>
+            <div class="dropdown-item" data-value="pa">Punjabi</div>
+            <div class="dropdown-item" data-value="ro">Romanian</div>
+            <div class="dropdown-item" data-value="ru">Russian</div>
+            <div class="dropdown-item" data-value="sm">Samoan</div>
+            <div class="dropdown-item" data-value="gd">Scots Gaelic</div>
+            <div class="dropdown-item" data-value="sr">Serbian</div>
+            <div class="dropdown-item" data-value="st">Sesotho</div>
+            <div class="dropdown-item" data-value="sn">Shona</div>
+            <div class="dropdown-item" data-value="sd">Sindhi</div>
+            <div class="dropdown-item" data-value="si">Sinhala (Sinhalese)</div>
+            <div class="dropdown-item" data-value="sk">Slovak</div>
+            <div class="dropdown-item" data-value="sl">Slovenian</div>
+            <div class="dropdown-item" data-value="so">Somali</div>
+            <div class="dropdown-item" data-value="es">Spanish</div>
+            <div class="dropdown-item" data-value="su">Sundanese</div>
+            <div class="dropdown-item" data-value="sw">Swahili</div>
+            <div class="dropdown-item" data-value="sv">Swedish</div>
+            <div class="dropdown-item" data-value="tg">Tajik</div>
+            <div class="dropdown-item" data-value="ta">Tamil</div>
+            <div class="dropdown-item" data-value="tt">Tatar</div>
+            <div class="dropdown-item" data-value="te">Telugu</div>
+            <div class="dropdown-item" data-value="th">Thai</div>
+            <div class="dropdown-item" data-value="tr">Turkish</div>
+            <div class="dropdown-item" data-value="tk">Turkmen</div>
+            <div class="dropdown-item" data-value="uk">Ukrainian</div>
+            <div class="dropdown-item" data-value="ur">Urdu</div>
+            <div class="dropdown-item" data-value="ug">Uyghur</div>
+            <div class="dropdown-item" data-value="uz">Uzbek</div>
+            <div class="dropdown-item" data-value="ve">Venda</div>
+            <div class="dropdown-item" data-value="vi">Vietnamese</div>
+            <div class="dropdown-item" data-value="cy">Welsh</div>
+            <div class="dropdown-item" data-value="xh">Xhosa</div>
+            <div class="dropdown-item" data-value="yi">Yiddish</div>
+            <div class="dropdown-item" data-value="yo">Yoruba</div>
+            <div class="dropdown-item" data-value="zu">Zulu</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subtitle-settings">
+        <h3>Subtitle Customization</h3>
+        
+        <div class="setting-group">
+          <label class="setting-label">Font Family</label>
+          <select id="fontFamily" class="font-select">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="'Times New Roman', serif">Times New Roman</option>
+            <option value="'Courier New', monospace">Courier New</option>
+            <option value="'Georgia', serif">Georgia</option>
+            <option value="'Verdana', sans-serif">Verdana</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">Font Size</label>
+          <div class="size-control">
+            <input type="range" id="fontSize" class="size-slider" min="12" max="48" value="18" step="1">
+            <span id="fontSizeValue" class="size-value">18px</span>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">Background Opacity</label>
+          <div class="opacity-control">
+            <input type="range" id="backgroundOpacity" class="opacity-slider" min="0" max="100" value="80" step="5">
+            <span id="opacityValue" class="opacity-value">80%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="status"></div>
+    <script src="popup.js"></script>
+  </body>
+</html> 

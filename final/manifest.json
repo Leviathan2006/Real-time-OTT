@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Subtitle-Translation",
+  "version": "1.1",
+  "description": "Displays Netflix subtitles in real time with optional translation support in 5 languages.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "webRequest",
+    "tabs",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://www.netflix.com/*",
+    "https://translate.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.netflix.com/*"],
+      "js": ["content_script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Subtitle-Translation"
+  }
+} 
